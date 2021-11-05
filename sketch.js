@@ -3,6 +3,7 @@ let waterData;
 
 let projection;
 
+// variable to store location
 let myPosition = {
   lat: 0,
   lng: 0,
@@ -18,9 +19,9 @@ function setup() {
   waterData = geodata.features;
   console.log("waterData", waterData);
 
+  // create d3 projection function
   projection = d3
     .geoMercator()
-    // .center([8.30801, 47.04554])
     .center([8.286628, 47.059598])
     .translate([width / 2, height / 2])
     .scale(3000000);
@@ -33,14 +34,16 @@ function draw() {
 
   drawWater();
 
+  // draw current location
   // transform  position to screen coordinates
   let projcoords = projection([myPosition.lng, myPosition.lat]);
   let x = projcoords[0];
   let y = projcoords[1];
 
-  // draw blinking location indicator
+  // calculate opacity for blinking location indicator
   let opacity = map(sin(0.2 * frameCount), -1, 1, 0, 255);
 
+  // draw location indicator
   noFill();
   stroke(0, 128, 163, opacity);
   strokeWeight(2);
@@ -50,10 +53,17 @@ function draw() {
   line(x, y - 15, x, y - 20);
   line(x, y + 15, x, y + 20);
 
+  // write current location to screen
   noStroke();
   fill("#0080A3");
-  text(myPosition.lng + " " + myPosition.lat, x + 20, y - 10);
+  textSize(32);
+  text(
+    nf(myPosition.lng, 0, 4) + " " + nf(myPosition.lat, 0, 4),
+    x + 20,
+    y - 10
+  );
 
+  // from time to time fetch current position and update location variable and projection center
   if (frameCount < 100 || frameCount % 100 == 0) {
     if (!navigator.geolocation) {
       alert("navigator.geolocation is not available");
@@ -64,19 +74,6 @@ function draw() {
       projection.center([myPosition.lng, myPosition.lat]);
     });
   }
-}
-
-function setPos(position) {
-  var lat = position.coords.latitude;
-  var lng = position.coords.longitude;
-  background(0);
-  fill(255);
-  textSize(32);
-  text(
-    "Current position: " + nf(lat, 2, 2) + " " + nf(lng, 2, 2),
-    10,
-    height / 2
-  );
 }
 
 function drawWater() {
@@ -91,15 +88,9 @@ function drawWater() {
       let coord = coordinates[j];
 
       let projcoords = projection(coord);
-      // let lat = coord[1];
-      // let lon = coord[0];
 
       let x = projcoords[0];
       let y = projcoords[1];
-
-      // let x = map(lon, bounds.left, bounds.right, 0, width);
-      // let y = map(lat, bounds.top, bounds.bottom, 0, height);
-      // console.log(x, y);
 
       vertex(x, y);
     }
@@ -107,6 +98,7 @@ function drawWater() {
   }
 }
 
+// this adapts canvas size to window size
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
