@@ -83,7 +83,7 @@ function drawWater() {
     let coordinates = geometry.coordinates[0][0];
     noStroke();
     fill("#005066");
-    fill("red");
+
     beginShape();
     for (let j = 0; j < coordinates.length; j++) {
       let coord = coordinates[j];
