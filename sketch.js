@@ -1,13 +1,6 @@
 let geodata;
 let waterData;
 
-// let bounds = {
-//   left: 8.20782,
-//   top: 47.094669,
-//   right: 8.365691,
-//   bottom: 47.024504,
-// };
-
 let projection;
 
 let myPosition = {
@@ -20,10 +13,8 @@ function preload() {
 }
 
 function setup() {
-  //createCanvas(900, 650);
   createCanvas(windowWidth, windowHeight);
 
-  // console.log(geodata);
   waterData = geodata.features;
   console.log("waterData", waterData);
 
@@ -33,7 +24,6 @@ function setup() {
     .translate([width / 2, height / 2])
     .scale(500000);
 
-  //  noLoop();
   frameRate(30);
 }
 
@@ -42,31 +32,23 @@ function draw() {
 
   drawWater();
 
+  // transform  position to screen coordinates
   let projcoords = projection([myPosition.lng, myPosition.lat]);
-  // let x = map(myPosition.lng, bounds.left, bounds.right, 0, width);
-  // let y = map(myPosition.lat, bounds.top, bounds.bottom, 0, height);
-
   let x = projcoords[0];
   let y = projcoords[1];
+
+  // draw blinking location indicator
+  let opacity = map(sin(0.2 * frameCount), -1, 1, 0, 255);
+
   noFill();
-  // stroke("#005066");
-  stroke("#0080A3");
+  stroke(0, 128, 163, opacity);
   strokeWeight(2);
   ellipse(x, y, 30, 30);
   line(x + 15, y, x + 20, y);
   line(x - 15, y, x - 20, y);
   line(x, y - 15, x, y - 20);
   line(x, y + 15, x, y + 20);
-  // line(x - 240, y, x - 260, y);
-  // line(x, y - 240, x, y - 260);
-  // line(x, y + 240, x, y + 260);
 
-  // ellipse(x, y, 500, 500);
-  // line(x + 240, y, x + 260, y);
-  // line(x - 240, y, x - 260, y);
-  // line(x, y - 240, x, y - 260);
-  // line(x, y + 240, x, y + 260);
-  // line(x, 20, x, 75);
   noStroke();
   fill("#0080A3");
   text(myPosition.lng + " " + myPosition.lat, x + 20, y - 10);
