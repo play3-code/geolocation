@@ -9,6 +9,8 @@ let myPosition = {
   lng: 0,
 };
 
+let zoom = 3000000;
+
 function preload() {
   geodata = loadJSON("lucerne-water.geojson");
 }
@@ -24,7 +26,7 @@ function setup() {
     .geoMercator()
     .center([8.286628, 47.059598])
     .translate([width / 2, height / 2])
-    .scale(3000000);
+    .scale(zoom);
 
   frameRate(30);
 }
@@ -97,6 +99,17 @@ function drawWater() {
     }
     endShape();
   }
+}
+
+function keyTyped() {
+  console.log("keyTyped");
+  if (key == "1") {
+    zoom -= 100000;
+  }
+  if (key == "2") {
+    zoom += 100000;
+  }
+  projection.scale(zoom);
 }
 
 // this adapts canvas size to window size
