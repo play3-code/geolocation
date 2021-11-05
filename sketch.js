@@ -20,9 +20,10 @@ function setup() {
 
   projection = d3
     .geoMercator()
-    .center([8.30801, 47.04554])
+    // .center([8.30801, 47.04554])
+    .center([8.286628, 47.059598])
     .translate([width / 2, height / 2])
-    .scale(500000);
+    .scale(3000000);
 
   frameRate(30);
 }
@@ -60,6 +61,7 @@ function draw() {
     navigator.geolocation.getCurrentPosition(function (position) {
       myPosition.lat = position.coords.latitude;
       myPosition.lng = position.coords.longitude;
+      projection.center([myPosition.lng, myPosition.lat]);
     });
   }
 }
